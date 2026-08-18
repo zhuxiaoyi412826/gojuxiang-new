@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>在线工具箱 - 免费实用工具集合</title>
+  <meta name="description" content="免费在线工具箱，提供文本处理、编码解码、开发工具、图片处理等实用工具，无需注册即可使用。">
+  <link rel="stylesheet" href="styles/main.css?v=4">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container header-inner">
+      <a href="#" class="logo" onclick="navigateTo('home'); return false;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+        </svg>
+        <span>工具箱</span>
+      </a>
+      
+      <div class="search-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/>
+          <path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input type="text" id="searchInput" placeholder="搜索工具..." autocomplete="off">
+      </div>
+      
+      <div class="header-actions">
+        <button class="header-btn" id="searchBtn" title="搜索">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="m21 21-4.35-4.35"/>
+          </svg>
+        </button>
+        <button class="header-btn" id="starredBtn" onclick="navigateTo('starred')" title="收藏">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+          </svg>
+        </button>
+        <button class="header-btn" id="historyBtn" onclick="navigateTo('history')" title="历史">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+          </svg>
+        </button>
+        <button class="header-btn" id="themeToggle" title="切换主题">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+  
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="container nav-inner">
+      <div class="nav-item active" data-page="home" onclick="navigateTo('home')">首页</div>
+      <div class="nav-item" data-page="category" onclick="navigateTo('category', 'encode')">分类</div>
+      <div class="nav-item" data-page="ai-nav" onclick="navigateTo('ai-nav')">AI导航</div>
+      <div class="nav-item" data-page="games" onclick="navigateTo('games')">小游戏</div>
+      <div class="nav-item" data-page="about" onclick="navigateTo('about')">关于</div>
+      <div class="nav-item" data-page="changelog" onclick="navigateTo('changelog')">更新日志</div>
+    </div>
+  </nav>
+  
+  <!-- Main Content -->
+  <main class="main">
+    <div class="container">
+      <!-- Home Page -->
+      <div id="page-home" class="page active">
+        <div id="home-content"></div>
+      </div>
+      
+      <!-- Category Page -->
+      <div id="page-category" class="page">
+        <div id="category-content"></div>
+      </div>
+      
+      <!-- AI Navigation Page -->
+      <div id="page-ai-nav" class="page">
+        <div id="ai-nav-content"></div>
+      </div>
+      
+      <!-- Games Page -->
+      <div id="page-games" class="page">
+        <div class="games-library">
+          <div class="games-header">
+            <div class="games-header-left">
+              <div class="games-logo">GAME LIBRARY</div>
+              <h1 class="games-title">全部<span id="games-count">0</span>个小游戏</h1>
+            </div>
+            <div class="games-search">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"/>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+              <input type="text" id="games-search-input" placeholder="搜索游戏名" oninput="filterGames()">
+            </div>
+            <div class="games-filters">
+              <select id="games-sort" onchange="renderGamesPage()">
+                <option value="latest">最新</option>
+                <option value="popular">最热</option>
+                <option value="name">名称</option>
+              </select>
+              <select id="games-category-filter" onchange="filterGamesByCategory()">
+                <option value="all">全部</option>
+              </select>
+            </div>
+          </div>
+          <div class="games-layout">
+            <div class="games-sidebar">
+              <div class="games-sidebar-title">分类</div>
+              <div id="games-categories"></div>
+            </div>
+            <div class="games-main">
+              <div id="games-content"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Tool Page -->
+      <div id="page-tool" class="page">
+        <div id="tool-content"></div>
+      </div>
+      
+      <!-- About Page -->
+      <div id="page-about" class="page">
+        <div class="tool-page">
+          <div class="tool-page-header">
+            <button class="tool-page-back" onclick="goBack()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="15 18 9 12 15 6"/>
+              </svg>
+            </button>
+            <h1 class="tool-page-title">关于</h1>
+          </div>
+          <div id="about-content"></div>
+        </div>
+      </div>
+      
+      <!-- Changelog Page -->
+      <div id="page-changelog" class="page">
+        <div class="tool-page">
+          <div class="tool-page-header">
+            <button class="tool-page-back" onclick="goBack()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="15 18 9 12 15 6"/>
+              </svg>
+            </button>
+            <h1 class="tool-page-title">更新日志</h1>
+          </div>
+          <div id="changelog-content"></div>
+        </div>
+      </div>
+      
+      <!-- Starred Page -->
+      <div id="page-starred" class="page">
+        <div class="tool-page">
+          <div class="tool-page-header">
+            <button class="tool-page-back" onclick="goBack()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="15 18 9 12 15 6"/>
+              </svg>
+            </button>
+            <h1 class="tool-page-title">我的收藏</h1>
+          </div>
+          <div id="starred-content"></div>
+        </div>
+      </div>
+      
+      <!-- History Page -->
+      <div id="page-history" class="page">
+        <div class="tool-page">
+          <div class="tool-page-header">
+            <button class="tool-page-back" onclick="goBack()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="15 18 9 12 15 6"/>
+              </svg>
+            </button>
+            <h1 class="tool-page-title">历史记录</h1>
+          </div>
+          <div id="history-content"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+  
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-links">
+        <a href="#" class="footer-link" onclick="navigateTo('about'); return false;">关于</a>
+        <a href="#" class="footer-link" onclick="navigateTo('changelog'); return false;">更新日志</a>
+      </div>
+      <div class="footer-copy">在线工具箱 - 免费实用的在线工具集合</div>
+    </div>
+  </footer>
+  
+  <!-- Search Modal -->
+  <div class="modal-overlay" id="searchModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title">搜索工具</h2>
+        <button class="modal-close" onclick="SearchManager.closeModal()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <input type="text" id="modalSearchInput" class="modal-search" placeholder="输入关键词搜索..." autocomplete="off">
+        <div class="modal-list" id="searchResults">
+          <div class="empty-state">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"/>
+              <path d="m21 21-4.35-4.35"/>
+            </svg>
+            <p>输入关键词搜索工具</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script src="js/qrcode.min.js?v=1"></script>
+  <script src="js/jsqr.min.js?v=1"></script>
+  <script src="js/tools-data.js?v=7"></script>
+  <script src="js/utils.js?v=7"></script>
+  <script src="js/text-tools.js?v=7"></script>
+  <script src="js/encode-tools.js?v=7"></script>
+  <script src="js/dev-tools.js?v=7"></script>
+  <script src="js/image-tools.js?v=7"></script>
+  <script src="js/life-fun-tools.js?v=7"></script>
+  <script src="js/data-tools.js?v=7"></script>
+  <script src="js/css-tools.js?v=7"></script>
+  <script src="js/render.js?v=7"></script>
+  <script>
+    // 初始化应用
+    document.addEventListener('DOMContentLoaded', () => {
+      ThemeManager.init();
+      SearchManager.init();
+      navigateTo('home');
+    });
+  </script>
+</body>
+</html>
